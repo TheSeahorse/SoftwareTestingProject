@@ -59,7 +59,7 @@ class BlackBoxTesting(SoupTest):
             resultsetlist.append(str(tag))
         self.assertEqual(['<h1>prashanna</h1>', '<h1>rai</h1>'], resultsetlist)
         self.assertEqual(2, len(result))
-
+        soup.select()
 
     def test_find_all_using_limit(self):
         """Test case that test number of items for matching tag using limit """
