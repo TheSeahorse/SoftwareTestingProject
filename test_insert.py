@@ -9,22 +9,23 @@ with open("test.html", "r") as f:
 
 class Test(unittest.TestCase):
 	
-	def test(self):
-		self.assertEqual(doc.head.title.text,'Hamza Book Collection')
-	def test_find_tags_and_change_name(self):
-		self.assertEqual(len(doc.find_all("h1")),3)
-		doc.h1.name="blockquote"
-		self.assertEqual(len(doc.find('blockquote')),1)
-	def test_find_parent(self):
-		string_=doc.find(string='This is another line at the end')
-		self.assertEqual(string_.find_parent().name,"h2")
-	def test_find_next_siblings(self):
-		self.assertEqual(len(doc.h1.find_next_siblings('h1')),2)
-	def test_find_previous_siblings(self):
-		self.assertEqual(len(((doc.find('h1',id="3").find_previous_siblings('h1')))),2)
-	def test_wrap_tag(self):
-		doc.h1.wrap(doc.new_tag("div"))
-		self.assertEqual(len(doc.find('div')),1)
+	def test1(self):
+		self.assertEqual(doc.head.title.text,'Salman Movie Collection')
+	def test2(self):
+		self.assertEqual(len(((doc.find('h1',id="3").find_all_previous('h1')))),2)
+	def test3(self):
+		string_=doc.find('h1')
+		self.assertEqual(len(string_.find_all_next()),2)
+	def test4(self):
+		doc.h1.append(' part 1')
+		self.assertEqual(doc.h1.text,'jurassic park part 1')
+	def test5(self):
+		tag=doc.new_tag('i')
+		tag.string='New Movies'
+		doc.h1.insert_before(tag)
+		print(doc.find('i'))
+		self.assertEqual(len(doc.find('i')),1)
+
 	
 
 	
