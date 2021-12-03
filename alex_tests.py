@@ -23,7 +23,7 @@ class TestFindAll(unittest.TestCase):
     
     def test_find_all_limit(self):
         """Making sure limit works together with find all"""
-        self.assertEqual(len(soup.find_all('meta', limit=1)),1)
+        self.assertEqual(len(soup.find_all('meta', limit=0)),[])
         self.assertEqual(len(soup.find_all('meta', limit=1)),1)
         self.assertEqual(soup.find_all('a', limit=1)[0].string, 'Go back to the demo')
 
