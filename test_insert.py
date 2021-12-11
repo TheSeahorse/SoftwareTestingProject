@@ -141,15 +141,11 @@ class TestExtract(unittest.TestCase):
 		extracted_tag_c = doc.head.extract()
 		self.assertEqual(str(doc.find_all("head")), "[]")
 
+	# Testing if the tag is returned for the nested case
 	def test_extract_d(self):
 		extracted_tag_d = doc.b.extract()
 		self.assertEqual(str(extracted_tag_d), "<b color=\"red\">This is a new paragraph!</b>")
 
 if __name__ == "__main__":
 	unittest.main()
-	
-	
-	
-# one function per test - one class per function
 
-#4 functions, 4-5 tests each
