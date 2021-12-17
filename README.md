@@ -3,7 +3,7 @@
 
 | Participants  | Function      |
 | ------------- | ------------- |
-| Prashanna     | find_all, find()  |
+| Prashanna     | find_all, find(), select()  |
 | fanispap  | insert(),insert_before(),insert_after(),clear(),extract()  |
 | Salman  | append(),extend(),NavigatableString(),new_tag(),decompose()  |
 | Muhammad HAMZA  | replace_with(),wrap(),unwrap(),smooth()|
