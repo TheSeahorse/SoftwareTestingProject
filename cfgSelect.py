@@ -9,3 +9,15 @@ def select(self, selector, namespaces=None, limit=None, **kwargs):
         )
     results = soupsieve.select(selector, self, namespaces, limit, **kwargs)
     return ResultSet(None, results)
+
+
+
+
+
+
+
+
+
+
+
+
