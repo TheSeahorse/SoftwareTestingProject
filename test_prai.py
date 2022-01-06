@@ -35,22 +35,8 @@ class Testing(unittest.TestCase):
                 selector, ', '.join(expected_ids), ', '.join(element_ids)
             )
         )
-    def assertSelectsxml(self, selector, expected_ids, **kwargs):
-        element_ids = [el['id'] for el in self.soup_xml.select(selector, **kwargs)]
-        element_ids.sort()
-        expected_ids.sort()
-        self.assertEqual(expected_ids, element_ids,
-            "Selector %s, expected [%s], got [%s]" % (
-                selector, ', '.join(expected_ids), ', '.join(element_ids)
-            )
-        )
-    assertSelectxml = assertSelectsxml
 
     assertSelect = assertSelects
-
-    def assertSelectMultiple(self, *tests):
-        for selector, expected_ids in tests:
-            self.assertSelect(selector, expected_ids)
 
     def test_select_one_tag_one(self):
         """Test-Case that expects ."""
