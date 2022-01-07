@@ -38,11 +38,15 @@ class TestWrap(unittest.TestCase):
 
 	def test_wrap_with_div(self):
 		doc.p.wrap(doc.new_tag("div"))
-		self.assertEqual(str(doc.div),'<div><p class="story"><h2>line begins</h2></p></div>')
+		self.assertEqual(str(doc.div),'<div><p id="story"><h2>line begins</h2></p></div>')
 	
 	def test_wrap_with_b(self):
 		doc.title.string.wrap(doc.new_tag("b"))
 		self.assertEqual(str(doc.title),'<title><b>Hamza Book Collection</b></title>')
+		
+	def test_wrap_with_i(self):
+		doc.title.b.string.wrap(doc.new_tag("i"))
+		self.assertEqual(str(doc.title),'<title><b><i>Hamza Book Collection</i></b></title>')
 
 
 class TestUnwrap(unittest.TestCase):
@@ -50,13 +54,14 @@ class TestUnwrap(unittest.TestCase):
 	def test_unwrap_div(self):
 		doc.body.div.unwrap()
 		self.assertEqual(len(doc.find_all('div')),0)
-		print(doc)
+
 	def test_unwrap_bold(self):
 		doc.h6.label.unwrap()
 		self.assertEqual(str(doc.h6),'<h6>This is a medium header</h6>')
 
-		# doc.body.p.h2.unwrap()
-		# self.assertEqual(len(doc.find_all('h2')),0)
+	def test_unwrap_italic(self):
+		doc.h5.b.i.unwrap()
+		self.assertEqual(str(doc.h5),'<h5><b>This is footer</b></h5>')
 	
 	
 class Test_smooth(unittest.TestCase):
@@ -67,10 +72,14 @@ class Test_smooth(unittest.TestCase):
 		self.assertEqual(doc.h2.contents,['line begins, from here'])
 	
 	def test_smooth_title(self):
-		doc.title.b.append(", review the list for free")
+		doc.title.b.i.append(", review the list for free")
 		doc.smooth()
 		doc.title.prettify()
-		self.assertEqual(doc.title.b.contents,['Hamza Book Collection, review the list for free'])
+		self.assertEqual(doc.title.b.i.contents,['Hamza Book Collection, review the list for free'])
+
+	def test_smooth_line_ends(self):
+		doc.find(id="ends").append(", from here")
+		self.assertEqual(str(doc.find(id="ends")),'<p id="ends"> line ends, from here</p>')
 
 
 if __name__ == "__main__":
