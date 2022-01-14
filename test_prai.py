@@ -1,72 +1,74 @@
-from pdb import set_trace
-import logging
-import os
 import unittest
-import sys
-import tempfile
 
-from bs4 import (
-    BeautifulSoup,
-    BeautifulStoneSoup,
-    GuessedAtParserWarning,
-    MarkupResemblesLocatorWarning,
-)
-from bs4.builder import (
-    TreeBuilder,
-    ParserRejectedMarkup,
-)
-from bs4.element import (
-    CharsetMetaAttributeValue,
-    Comment,
-    ContentMetaAttributeValue,
-    SoupStrainer,
-    NamespacedAttribute,
-    Tag,
-    NavigableString,
-)
-
-import bs4.dammit
-from bs4.dammit import (
-    EntitySubstitution,
-    UnicodeDammit,
-)
-from bs4.testing import (
-    default_builder,
-    SoupTest
-)
-
-try:
-    from bs4.builder import LXMLTreeBuilder, LXMLTreeBuilderForXML
-
-    LXML_PRESENT = True
-except ImportError as e:
-    LXML_PRESENT = False
+from bs4 import BeautifulSoup
 
 
-class BlackBoxTesting(SoupTest):
+class Testing(unittest.TestCase):
 
-    def test_find_first_content_of_tag(self):
-        """Positive Test-Case that gets first content of tag."""
-        soup = self.soup("<x>1</x><y>2</y><x>3</x><y>4</y>")
-        self.assertEqual(soup.find("x").string, "1")
+    def setUp(self):
+        HTML = """
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+        <html>
+        <head>
+        <title>title</title>
+        </head>
+        <body>
+        <div id="main" class="fancy">
+        <div id="footer">
+        </div>
+        """
+        xml = """<tag xmlns:ns1="http://namespace1/" xmlns:ns2="http://namespace2/">
+         <ns1:child>I'm in namespace 1</ns1:child>
+         <ns2:child>I'm in namespace 2</ns2:child>
+        </tag> """
 
-    def test_find_all_tag_by_tag_name(self):
-        """Positive Test-Case that finds all tags for given tag name and list them."""
-        soup = self.soup("<h1>prashanna</h1><h1>rai</h1>")
-        result=soup.find_all("h1")
+        self.soup_html = BeautifulSoup(HTML, 'html.parser')
+        self.soup_xml = BeautifulSoup(xml, "xml")
+
+    def assertSelects(self, selector, expected_ids, **kwargs):
+        element_ids = [el['id'] for el in self.soup_html.select(selector, **kwargs)]
+        element_ids.sort()
+        expected_ids.sort()
+        self.assertEqual(expected_ids, element_ids,
+            "Selector %s, expected [%s], got [%s]" % (
+                selector, ', '.join(expected_ids), ', '.join(element_ids)
+            )
+        )
+
+    assertSelect = assertSelects
+
+    def test_select_one_tag_one(self):
+        """Test-Case that expects ."""
+        """Test path [1,2,3,4,5,6,10]"""
+        elements = self.soup_html.select('title')
+        self.assertEqual(len(elements), 1)
+        self.assertEqual(elements[0].name, 'title')
+        self.assertEqual(elements[0].contents, ['title'])
+
+
+    def test_select_elements_with_limit(self):
+        """Test-Case that expects ."""
+        """Test path [1,2,3,4,6,10]"""
+        self.assertSelects('html div', ['main'], limit=1)
+
+    def test_select_namespaced(self):
+        """Test-Case that expects ."""
+        """Test path [1,2,4,5,6,10]"""
+        namespaces = dict(first="http://namespace1/", second="http://namespace2/")
+        self.soup_xml.select("child", namespaces=namespaces)
+        result=self.soup_xml.select("child", namespaces=namespaces)
         resultsetlist=[]
         for tag in result:
             resultsetlist.append(str(tag))
-        self.assertEqual(['<h1>prashanna</h1>', '<h1>rai</h1>'], resultsetlist)
-        self.assertEqual(2, len(result))
+        self.assertEqual(["<ns1:child>I'm in namespace 1</ns1:child>", "<ns2:child>I'm in namespace 2</ns2:child>"],resultsetlist)
 
-
-    def test_find_all_using_limit(self):
-        """Test case that test number of items for matching tag using limit """
-        soup = self.soup("<h1>prashanna</h1><h1>rai</h1><h1>rai1</h1>")
-        result= soup.find_all('h1', limit=2)
+    def test_select_namespaced_with_limit(self):
+        """Test-Case that expects ."""
+        """Test path [1,2,4,5,6,10]"""
+        namespaces = dict(first="http://namespace1/", second="http://namespace2/")
+        result=self.soup_xml.select("child", namespaces=namespaces,limit=1)
         resultsetlist=[]
         for tag in result:
             resultsetlist.append(str(tag))
-        self.assertEqual(['<h1>prashanna</h1>', '<h1>rai</h1>'], resultsetlist)
-        self.assertEqual(2, len(result))
+        self.assertEqual(["<ns1:child>I'm in namespace 1</ns1:child>"],resultsetlist)
