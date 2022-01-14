@@ -2,7 +2,7 @@ import unittest
 
 from bs4 import BeautifulSoup
 
-with open("test.html", "r") as f:
+with open("hamza.html", "r") as f:
 	doc = BeautifulSoup(f, "html.parser")
 # HTML From File
 
